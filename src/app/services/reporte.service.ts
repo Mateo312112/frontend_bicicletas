@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ReporteVentaDia, ReporteTopProducto, ReporteStock } from '../models/venta.model';
 
-const API = 'http://localhost:8080/api/reportes';
+const API = 'http://localhost:8080/reportes';
 
 @Injectable({ providedIn: 'root' })
 export class ReporteService {

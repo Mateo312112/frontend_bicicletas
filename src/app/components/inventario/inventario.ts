@@ -7,7 +7,7 @@ import { Inventario } from '../../models/inventario.model';
 import { Bicicleta } from '../../models/bicicleta.model';
 
 @Component({ selector:'app-inventario', standalone:true, imports:[CommonModule,FormsModule], templateUrl:'./inventario.html', styleUrl:'./inventario.css' })
-export class Inventario implements OnInit {
+export class InventarioComponent implements OnInit {
   inventario: any[] = [];
   bicicletas: Bicicleta[] = [];
   loading = true;
