@@ -8,8 +8,8 @@ import { Cliente } from '../../models/cliente.model';
   selector: 'app-clientes',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './clientes.component.html',
-  styleUrls: ['./clientes.component.css']
+  templateUrl: './clientes.html',
+  styleUrls: ['./clientes.css'],
 })
 export class ClientesComponent implements OnInit {
   clientes: Cliente[] = [];
@@ -22,7 +22,7 @@ export class ClientesComponent implements OnInit {
   formData: Cliente = {
     documento: '',
     nombre: '',
-    telefono: ''
+    telefono: '',
   };
 
   clienteOriginal: string = '';
@@ -45,7 +45,7 @@ export class ClientesComponent implements OnInit {
       error: () => {
         this.mostrarMensaje('Error al cargar clientes', 'error');
         this.loading = false;
-      }
+      },
     });
   }
 
@@ -64,7 +64,7 @@ export class ClientesComponent implements OnInit {
         this.mostrarMensaje('Cliente no encontrado', 'error');
         this.clientes = [];
         this.loading = false;
-      }
+      },
     });
   }
 
@@ -93,7 +93,7 @@ export class ClientesComponent implements OnInit {
           this.cerrarModal();
           this.cargarClientes();
         },
-        error: () => this.mostrarMensaje('Error al actualizar cliente', 'error')
+        error: () => this.mostrarMensaje('Error al actualizar cliente', 'error'),
       });
     } else {
       this.clienteService.crearCliente(this.formData).subscribe({
@@ -102,7 +102,7 @@ export class ClientesComponent implements OnInit {
           this.cerrarModal();
           this.cargarClientes();
         },
-        error: () => this.mostrarMensaje('Error al crear cliente', 'error')
+        error: () => this.mostrarMensaje('Error al crear cliente', 'error'),
       });
     }
   }
@@ -114,19 +114,19 @@ export class ClientesComponent implements OnInit {
         this.mostrarMensaje('Cliente eliminado con éxito', 'success');
         this.cargarClientes();
       },
-      error: () => this.mostrarMensaje('Error al eliminar cliente', 'error')
+      error: () => this.mostrarMensaje('Error al eliminar cliente', 'error'),
     });
   }
 
   mostrarMensaje(msg: string, tipo: string): void {
     this.mensaje = msg;
     this.tipoMensaje = tipo;
-    setTimeout(() => this.mensaje = '', 3000);
+    setTimeout(() => (this.mensaje = ''), 3000);
   }
 
   get clientesFiltrados(): Cliente[] {
-    return this.clientes.filter(c =>
-      c.nombre.toLowerCase().includes(this.searchNombre.toLowerCase())
+    return this.clientes.filter((c) =>
+      c.nombre.toLowerCase().includes(this.searchNombre.toLowerCase()),
     );
   }
 }

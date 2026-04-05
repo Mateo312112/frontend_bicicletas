@@ -8,8 +8,8 @@ import { Bicicleta } from '../../models/bicicleta.model';
   selector: 'app-bicicletas',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './bicicletas.component.html',
-  styleUrls: ['./bicicletas.component.css'],
+  templateUrl: './bicicletas.html',
+  styleUrls: ['./bicicletas.css'],
 })
 export class BicicletasComponent implements OnInit {
   bicicletas: Bicicleta[] = [];

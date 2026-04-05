@@ -8,8 +8,8 @@ import { DetalleVenta } from '../../models/detalle-venta.model';
   selector: 'app-detalle-venta',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './detalle-venta.component.html',
-  styleUrls: ['./detalle-venta.component.css'],
+  templateUrl: './detalle-venta.html',
+  styleUrls: ['./detalle-venta.css'],
 })
 export class DetalleVentaComponent implements OnInit {
   detalles: DetalleVenta[] = [];
