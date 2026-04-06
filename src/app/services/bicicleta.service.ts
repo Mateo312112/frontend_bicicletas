@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, take } from 'rxjs';
 import { Bicicleta } from '../models/bicicleta.model';
 
 @Injectable({
@@ -27,7 +27,7 @@ export class BicicletaService {
     return this.http.put<Bicicleta>(`${this.apiUrl}/${id}`, bicicleta);
   }
 
-  eliminarBicicleta(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`);
+  eliminarBicicleta(id: number): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}/${id}`);
   }
 }

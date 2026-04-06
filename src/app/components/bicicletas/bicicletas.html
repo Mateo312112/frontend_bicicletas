@@ -104,7 +104,7 @@
           <label>Precio Lista</label>
           <input type="number" [(ngModel)]="formData.precioLista" placeholder="0.00" step="0.01" />
         </div>
-        <button class="btn-primary full" (click)="guardar()">
+        <button type="button" class="btn-primary full" (click)="guardar()">
           {{ editando ? 'Actualizar' : 'Crear' }} Bicicleta
         </button>
       </div>
