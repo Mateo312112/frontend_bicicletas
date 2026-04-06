@@ -1,1 +1,124 @@
-<p>reportes works!</p>
+<div class="page" style="padding-bottom:48px">
+  <div class="page-header">
+    <div><h1>REPORTES</h1><p>Análisis de rendimiento y estado del negocio.</p></div>
+  </div>
+
+  <!-- VENTAS POR DÍA -->
+  <div style="margin-bottom:40px">
+    <div class="section-title" style="justify-content:space-between;flex-wrap:wrap;gap:10px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div class="section-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        </div>
+        <h3>Ventas por Día</h3>
+        <span *ngIf="filtrando" style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;background:var(--black);color:#fff;padding:2px 8px">Rango activo</span>
+      </div>
+      <div style="display:flex;align-items:flex-end;gap:8px;flex-wrap:wrap">
+        <div>
+          <label style="margin-bottom:3px">Inicio</label>
+          <input type="date" [(ngModel)]="fechaInicio" style="width:auto">
+        </div>
+        <div>
+          <label style="margin-bottom:3px">Fin</label>
+          <input type="date" [(ngModel)]="fechaFin" style="width:auto">
+        </div>
+        <button class="btn btn-primary btn-sm" (click)="filtrarRango()">Filtrar</button>
+        <button class="btn btn-ghost btn-sm" *ngIf="filtrando" (click)="resetVentas()">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.96"/></svg>
+          Todas
+        </button>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Fecha</th><th style="text-align:center">Ventas</th><th style="text-align:right">Recaudado</th></tr></thead>
+        <tbody>
+        <tr *ngIf="loading"><td colspan="3" style="text-align:center;padding:32px;color:var(--text2)">Cargando...</td></tr>
+        <tr *ngIf="!loading && ventasDia.length===0"><td colspan="3" style="text-align:center;padding:32px;color:var(--text2);font-style:italic">No hay datos en este periodo.</td></tr>
+        <tr *ngFor="let v of ventasDia">
+          <td class="mono">{{formatFecha(v.fecha)}}</td>
+          <td class="mono" style="text-align:center">{{v.cantidadVentas}}</td>
+          <td class="mono" style="text-align:right;font-weight:700">${{formatPrice(v.totalRecaudado)}}</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- TOP PRODUCTOS -->
+  <div style="margin-bottom:40px">
+    <div class="section-title">
+      <div class="section-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      </div>
+      <h3>Top Productos más Vendidos</h3>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>#</th><th>Marca</th><th>Modelo</th><th style="text-align:right">Unidades Vendidas</th></tr></thead>
+        <tbody>
+        <tr *ngIf="loading"><td colspan="4" style="text-align:center;padding:32px;color:var(--text2)">Cargando...</td></tr>
+        <tr *ngIf="!loading && topProductos.length===0"><td colspan="4" style="text-align:center;padding:32px;color:var(--text2);font-style:italic">No hay datos de productos vendidos.</td></tr>
+        <tr *ngFor="let p of topProductos; let i=index">
+          <td class="mono" style="color:var(--text2)">{{i+1}}</td>
+          <td style="font-weight:700">{{p.marca}}</td>
+          <td style="color:var(--text2)">{{p.modelo}}</td>
+          <td class="mono" style="text-align:right;font-weight:700">{{p.totalUnidadesVendidas}}</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- STOCK -->
+  <div>
+    <div class="section-title" style="justify-content:space-between">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div class="section-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+        </div>
+        <h3>Stock Actual</h3>
+        <span *ngIf="soloStockCritico" style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;background:var(--black);color:#fff;padding:2px 8px">Solo críticos</span>
+      </div>
+      <div>
+        <button class="btn btn-outline btn-sm" *ngIf="!soloStockCritico" (click)="filtrarStockCritico()">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+          Solo Críticos
+        </button>
+        <button class="btn btn-ghost btn-sm" *ngIf="soloStockCritico" (click)="resetStock()">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.96"/></svg>
+          Ver Todos
+        </button>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Código</th><th>Bicicleta</th><th style="text-align:center">Disponible</th><th style="text-align:center">Mínimo</th><th style="text-align:right">Estado</th></tr></thead>
+        <tbody>
+        <tr *ngIf="loading"><td colspan="5" style="text-align:center;padding:32px;color:var(--text2)">Cargando...</td></tr>
+        <tr *ngIf="!loading && stock.length===0"><td colspan="5" style="text-align:center;padding:32px;color:var(--text2);font-style:italic">No hay datos de stock.</td></tr>
+        <tr *ngFor="let s of stock" [style.background]="s.bajoStockMinimo?'#fafafa':''">
+          <td class="mono" style="font-weight:700">{{s.codigo}}</td>
+          <td style="color:var(--text2)">{{s.marca}} {{s.modelo}}</td>
+          <td class="mono" style="text-align:center">{{s.cantidadDisponible}}</td>
+          <td class="mono" style="text-align:center">{{s.stockMinimo}}</td>
+          <td style="text-align:right">
+              <span *ngIf="s.bajoStockMinimo" style="display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--text)">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg>
+                Bajo Mínimo.
+              </span>
+            <span *ngIf="!s.bajoStockMinimo" style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--text2)">OK</span>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="toast-container" *ngIf="toast">
+  <div class="toast" [class.toast-success]="toast.type==='success'" [class.toast-error]="toast.type==='error'">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ng-container *ngIf="toast.type==='success'"><polyline points="20 6 9 17 4 12"/></ng-container><ng-container *ngIf="toast.type==='error'"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/></ng-container></svg>
+    {{toast.msg}}
+  </div>
+</div>
