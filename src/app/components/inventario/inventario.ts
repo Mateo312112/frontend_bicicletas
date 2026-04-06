@@ -7,7 +7,7 @@ import { Inventario } from '../../models/inventario.model';
 import { Bicicleta } from '../../models/bicicleta.model';
 
 @Component({ selector:'app-inventario', standalone:true, imports:[CommonModule,FormsModule], templateUrl:'./inventario.html', styleUrl:'./inventario.css' })
-export class Inventario implements OnInit {
+export class InventarioComponent implements OnInit {
   inventario: any[] = [];
   bicicletas: Bicicleta[] = [];
   loading = true;
@@ -21,7 +21,7 @@ export class Inventario implements OnInit {
   editQuantity = 0;
 
   constructor(private svc: InventarioService, private biciSvc: BicicletaService) {}
-  ngOnInit() { this.load(); this.biciSvc.getAll().subscribe(d => this.bicicletas = d); }
+  ngOnInit() { this.load(); this.biciSvc.getBicicletas().subscribe((d: Bicicleta[]) => this.bicicletas = d);}
 
   load(alertas = false) {
     this.loading = true; this.soloAlertas = alertas;

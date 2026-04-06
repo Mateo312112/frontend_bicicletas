@@ -138,11 +138,11 @@
           <tbody>
             <tr *ngFor="let det of selectedVenta.detallesVenta">
               <td>
-                <div style="font-weight:700">{{det.bicicleta?.codigo}}</div>
-                <div style="font-size:11px;color:var(--text2)">{{det.bicicleta?.marca}} {{det.bicicleta?.modelo}}</div>
+                <div style="font-weight:700">{{det.bicicleta.codigo}}</div>
+                <div style="font-size:11px;color:var(--text2)">{{det.bicicleta.marca}} {{det.bicicleta.modelo}}</div>
               </td>
               <td class="mono" style="text-align:center">{{det.cantidad}}</td>
-              <td class="mono" style="text-align:right">${{formatPrice(det.precioUnitario)}}</td>
+              <td class="mono" style="text-align:right">${{formatPrice(det.precioUnitarioVenta)}}</td>
               <td class="mono" style="text-align:right;font-weight:700">${{formatPrice(det.subtotal)}}</td>
             </tr>
           </tbody>
