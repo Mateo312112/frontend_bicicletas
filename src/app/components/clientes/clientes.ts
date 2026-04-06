@@ -13,19 +13,12 @@ import { Cliente } from '../../models/cliente.model';
 })
 export class ClientesComponent implements OnInit {
   clientes: Cliente[] = [];
-  loading = false;
   mostrarModal = false;
   editando = false;
   searchDocumento = '';
   searchNombre = '';
-
-  formData: Cliente = {
-    documento: '',
-    nombre: '',
-    telefono: '',
-  };
-
-  clienteOriginal: string = '';
+  formData: Cliente = { documento: '', nombre: '', telefono: '' };
+  clienteOriginal = '';
   mensaje = '';
   tipoMensaje = '';
 
@@ -36,36 +29,26 @@ export class ClientesComponent implements OnInit {
   }
 
   cargarClientes(): void {
-    this.loading = true;
+    this.searchNombre = '';
+    this.searchDocumento = '';
     this.clienteService.getClientes().subscribe({
-      next: (data) => {
-        this.clientes = data;
-        this.loading = false;
-      },
-      error: () => {
-        this.mostrarMensaje('Error al cargar clientes', 'error');
-        this.loading = false;
-      },
+      next: (data) => { this.clientes = data; },
+      error: () => { this.mostrarMensaje('Error al cargar clientes', 'error'); }
     });
   }
 
   buscarPorDocumento(): void {
-    if (!this.searchDocumento) {
-      this.cargarClientes();
-      return;
-    }
-    this.loading = true;
+    if (!this.searchDocumento) { this.cargarClientes(); return; }
     this.clienteService.getClienteByDocumento(this.searchDocumento).subscribe({
-      next: (data) => {
-        this.clientes = data ? [data] : [];
-        this.loading = false;
-      },
-      error: () => {
-        this.mostrarMensaje('Cliente no encontrado', 'error');
-        this.clientes = [];
-        this.loading = false;
-      },
+      next: (data) => { this.clientes = data ? [data] : []; },
+      error: () => { this.mostrarMensaje('Cliente no encontrado', 'error'); this.clientes = []; }
     });
+  }
+
+  get clientesFiltrados(): Cliente[] {
+    return this.clientes.filter((c) =>
+      (c.nombre || '').toLowerCase().includes(this.searchNombre.toLowerCase())
+    );
   }
 
   abrirModalCrear(): void {
@@ -81,52 +64,33 @@ export class ClientesComponent implements OnInit {
     this.mostrarModal = true;
   }
 
-  cerrarModal(): void {
-    this.mostrarModal = false;
-  }
+  cerrarModal(): void { this.mostrarModal = false; }
 
   guardar(): void {
     if (this.editando) {
       this.clienteService.actualizarCliente(this.clienteOriginal, this.formData).subscribe({
-        next: () => {
-          this.mostrarMensaje('Cliente actualizado con éxito', 'success');
-          this.cerrarModal();
-          this.cargarClientes();
-        },
-        error: () => this.mostrarMensaje('Error al actualizar cliente', 'error'),
+        next: () => { this.mostrarMensaje('Cliente actualizado', 'success'); this.cerrarModal(); this.cargarClientes(); },
+        error: () => this.mostrarMensaje('Error al actualizar', 'error')
       });
     } else {
       this.clienteService.crearCliente(this.formData).subscribe({
-        next: () => {
-          this.mostrarMensaje('Cliente creado con éxito', 'success');
-          this.cerrarModal();
-          this.cargarClientes();
-        },
-        error: () => this.mostrarMensaje('Error al crear cliente', 'error'),
+        next: () => { this.mostrarMensaje('Cliente creado', 'success'); this.cerrarModal(); this.cargarClientes(); },
+        error: () => this.mostrarMensaje('Error al crear', 'error')
       });
     }
   }
 
   eliminar(documento: string): void {
-    if (!confirm('¿Estás seguro de eliminar este cliente?')) return;
+    if (!confirm('¿Eliminar este cliente?')) return;
     this.clienteService.eliminarCliente(documento).subscribe({
-      next: () => {
-        this.mostrarMensaje('Cliente eliminado con éxito', 'success');
-        this.cargarClientes();
-      },
-      error: () => this.mostrarMensaje('Error al eliminar cliente', 'error'),
+      next: () => { this.mostrarMensaje('Cliente eliminado', 'success'); this.cargarClientes(); },
+      error: () => this.mostrarMensaje('Error al eliminar', 'error')
     });
   }
 
   mostrarMensaje(msg: string, tipo: string): void {
     this.mensaje = msg;
     this.tipoMensaje = tipo;
-    setTimeout(() => (this.mensaje = ''), 3000);
-  }
-
-  get clientesFiltrados(): Cliente[] {
-    return this.clientes.filter((c) =>
-      c.nombre.toLowerCase().includes(this.searchNombre.toLowerCase()),
-    );
+    setTimeout(() => this.mensaje = '', 3000);
   }
 }

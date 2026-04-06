@@ -27,7 +27,7 @@ export class ClienteService {
     return this.http.put<Cliente>(`${this.apiUrl}/${documento}`, cliente);
   }
 
-  eliminarCliente(documento: string): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${documento}`);
-  }
+  eliminarCliente(documento: string): Observable<any> {
+  return this.http.delete(`${this.apiUrl}/${documento}`, { responseType: 'text' as 'json' });
+}
 }
