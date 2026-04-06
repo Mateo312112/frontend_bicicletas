@@ -70,6 +70,8 @@ export class BicicletasComponent implements OnInit {
     this.mostrarModal = false;
   }
 
+  guardando = false;
+
   guardar(): void {
     if (this.editando) {
       this.bicicletaService.actualizarBicicleta(this.idOriginal, this.formData).subscribe({
@@ -97,7 +99,7 @@ export class BicicletasComponent implements OnInit {
     this.bicicletaService.eliminarBicicleta(id).subscribe({
       next: () => {
         this.mostrarMensaje('Bicicleta eliminada con éxito', 'success');
-        this.cargarBicicletas();
+        this.bicicletas = this.bicicletas.filter((b) => b.idBicicleta !== id);
       },
       error: () => this.mostrarMensaje('Error al eliminar bicicleta', 'error'),
     });
