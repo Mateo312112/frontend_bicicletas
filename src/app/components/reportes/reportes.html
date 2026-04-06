@@ -33,13 +33,13 @@
       <table>
         <thead><tr><th>Fecha</th><th style="text-align:center">Ventas</th><th style="text-align:right">Recaudado</th></tr></thead>
         <tbody>
-          <tr *ngIf="loading"><td colspan="3" style="text-align:center;padding:32px;color:var(--text2)">Cargando...</td></tr>
-          <tr *ngIf="!loading && ventasDia.length===0"><td colspan="3" style="text-align:center;padding:32px;color:var(--text2);font-style:italic">No hay datos en este periodo.</td></tr>
-          <tr *ngFor="let v of ventasDia">
-            <td class="mono">{{formatFecha(v.fecha)}}</td>
-            <td class="mono" style="text-align:center">{{v.cantidadVentas}}</td>
-            <td class="mono" style="text-align:right;font-weight:700">${{formatPrice(v.totalRecaudado)}}</td>
-          </tr>
+        <tr *ngIf="loading"><td colspan="3" style="text-align:center;padding:32px;color:var(--text2)">Cargando...</td></tr>
+        <tr *ngIf="!loading && ventasDia.length===0"><td colspan="3" style="text-align:center;padding:32px;color:var(--text2);font-style:italic">No hay datos en este periodo.</td></tr>
+        <tr *ngFor="let v of ventasDia">
+          <td class="mono">{{formatFecha(v.fecha)}}</td>
+          <td class="mono" style="text-align:center">{{v.cantidadVentas}}</td>
+          <td class="mono" style="text-align:right;font-weight:700">${{formatPrice(v.totalRecaudado)}}</td>
+        </tr>
         </tbody>
       </table>
     </div>
@@ -57,14 +57,14 @@
       <table>
         <thead><tr><th>#</th><th>Marca</th><th>Modelo</th><th style="text-align:right">Unidades Vendidas</th></tr></thead>
         <tbody>
-          <tr *ngIf="loading"><td colspan="4" style="text-align:center;padding:32px;color:var(--text2)">Cargando...</td></tr>
-          <tr *ngIf="!loading && topProductos.length===0"><td colspan="4" style="text-align:center;padding:32px;color:var(--text2);font-style:italic">No hay datos de productos vendidos.</td></tr>
-          <tr *ngFor="let p of topProductos; let i=index">
-            <td class="mono" style="color:var(--text2)">{{i+1}}</td>
-            <td style="font-weight:700">{{p.marca}}</td>
-            <td style="color:var(--text2)">{{p.modelo}}</td>
-            <td class="mono" style="text-align:right;font-weight:700">{{p.totalUnidadesVendidas}}</td>
-          </tr>
+        <tr *ngIf="loading"><td colspan="4" style="text-align:center;padding:32px;color:var(--text2)">Cargando...</td></tr>
+        <tr *ngIf="!loading && topProductos.length===0"><td colspan="4" style="text-align:center;padding:32px;color:var(--text2);font-style:italic">No hay datos de productos vendidos.</td></tr>
+        <tr *ngFor="let p of topProductos; let i=index">
+          <td class="mono" style="color:var(--text2)">{{i+1}}</td>
+          <td style="font-weight:700">{{p.marca}}</td>
+          <td style="color:var(--text2)">{{p.modelo}}</td>
+          <td class="mono" style="text-align:right;font-weight:700">{{p.totalUnidadesVendidas}}</td>
+        </tr>
         </tbody>
       </table>
     </div>
@@ -95,21 +95,21 @@
       <table>
         <thead><tr><th>Código</th><th>Bicicleta</th><th style="text-align:center">Disponible</th><th style="text-align:center">Mínimo</th><th style="text-align:right">Estado</th></tr></thead>
         <tbody>
-          <tr *ngIf="loading"><td colspan="5" style="text-align:center;padding:32px;color:var(--text2)">Cargando...</td></tr>
-          <tr *ngIf="!loading && stock.length===0"><td colspan="5" style="text-align:center;padding:32px;color:var(--text2);font-style:italic">No hay datos de stock.</td></tr>
-          <tr *ngFor="let s of stock" [style.background]="s.bajoStockMinimo?'#fafafa':''">
-            <td class="mono" style="font-weight:700">{{s.codigo}}</td>
-            <td style="color:var(--text2)">{{s.marca}} {{s.modelo}}</td>
-            <td class="mono" style="text-align:center">{{s.cantidadDisponible}}</td>
-            <td class="mono" style="text-align:center">{{s.stockMinimo}}</td>
-            <td style="text-align:right">
+        <tr *ngIf="loading"><td colspan="5" style="text-align:center;padding:32px;color:var(--text2)">Cargando...</td></tr>
+        <tr *ngIf="!loading && stock.length===0"><td colspan="5" style="text-align:center;padding:32px;color:var(--text2);font-style:italic">No hay datos de stock.</td></tr>
+        <tr *ngFor="let s of stock" [style.background]="s.bajoStockMinimo?'#fafafa':''">
+          <td class="mono" style="font-weight:700">{{s.codigo}}</td>
+          <td style="color:var(--text2)">{{s.marca}} {{s.modelo}}</td>
+          <td class="mono" style="text-align:center">{{s.cantidadDisponible}}</td>
+          <td class="mono" style="text-align:center">{{s.stockMinimo}}</td>
+          <td style="text-align:right">
               <span *ngIf="s.bajoStockMinimo" style="display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--text)">
                 <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg>
-                Bajo Mínimo
+                Bajo Mínimo.
               </span>
-              <span *ngIf="!s.bajoStockMinimo" style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--text2)">OK</span>
-            </td>
-          </tr>
+            <span *ngIf="!s.bajoStockMinimo" style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--text2)">OK</span>
+          </td>
+        </tr>
         </tbody>
       </table>
     </div>
