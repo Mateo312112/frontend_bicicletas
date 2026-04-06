@@ -1,12 +1,22 @@
-import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component } from '@angular/core';
+import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  standalone: true,
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, CommonModule],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
 export class App {
-  protected readonly title = signal('tienda_bicicletas');
+  sidebarOpen = true;
+
+  navItems = [
+    { path: '/bicicletas', label: 'Bicicletas', icon: 'bike' },
+    { path: '/clientes', label: 'Clientes', icon: 'users' },
+    { path: '/inventario', label: 'Inventario', icon: 'package' },
+    { path: '/ventas', label: 'Ventas', icon: 'cart' },
+    { path: '/reportes', label: 'Reportes', icon: 'chart' },
+  ];
 }

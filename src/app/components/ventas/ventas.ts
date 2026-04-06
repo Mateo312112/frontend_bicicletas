@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { VentaService } from '../../services/venta.service';
-import { ClienteService } from '../../services/venta.service';
+import { ClienteService } from '../../services/cliente.service';
 import { BicicletaService } from '../../services/bicicleta.service';
 import { Venta } from '../../models/venta.model';
 import { Cliente } from '../../models/cliente.model';
@@ -24,7 +24,7 @@ export class Ventas implements OnInit {
   items: { idBicicleta:number; cantidad:number }[] = [{ idBicicleta:0, cantidad:1 }];
 
   constructor(private svc: VentaService, private cliSvc: ClienteService, private biciSvc: BicicletaService) {}
-  ngOnInit() { this.load(); this.biciSvc.getAll().subscribe(d => this.bicicletas=d); }
+  ngOnInit() { this.load(); this.biciSvc.getBicicletas().subscribe((d: Bicicleta[]) => this.bicicletas = d); }
 
   load() {
     this.loading = true;
@@ -46,8 +46,8 @@ export class Ventas implements OnInit {
 
   buscarCliente() {
     if (!this.docCliente) return;
-    this.cliSvc.getByDocumento(this.docCliente).subscribe({
-      next: d => { this.clienteEncontrado=d; this.showToast(`Cliente: ${d.nombre}`,'success'); },
+    this.cliSvc.getClienteByDocumento(this.docCliente).subscribe({
+     next: (d: Cliente) => { this.clienteEncontrado=d; this.showToast(`Cliente: ${d.nombre}`, 'success'); },
       error: () => { this.clienteEncontrado=null; this.showToast('Cliente no encontrado','error'); }
     });
   }
