@@ -19,5 +19,5 @@ export class InventarioService {
     return this.http.put<Inventario>(`${API}/bicicleta/${idBicicleta}?nuevaCantidad=${nuevaCantidad}`, {});
   }
 
-
+  
 }
