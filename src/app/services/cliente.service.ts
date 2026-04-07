@@ -5,7 +5,7 @@ import { Cliente } from '../models/cliente.model';
 
 @Injectable({ providedIn: 'root' })
 export class ClienteService {
-  private apiUrl = 'http://localhost:8080/clientes';
+  private apiUrl = 'http://localhost:8080/api/clientes'; // CORREGIDO: agregado /api/
 
   constructor(private http: HttpClient) {}
 

@@ -2,13 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Venta, VentaRequest } from '../models/venta.model';
-
-const API = 'http://localhost:8080/ventas';
-
+ 
+const API = 'http://localhost:8080/api/ventas'; // CORREGIDO: agregado /api/
+ 
 @Injectable({ providedIn: 'root' })
 export class VentaService {
   constructor(private http: HttpClient) {}
-
+ 
   getAll(): Observable<Venta[]> { return this.http.get<Venta[]>(API); }
   getById(id: number): Observable<Venta> { return this.http.get<Venta>(`${API}/${id}`); }
   getByCliente(doc: string): Observable<Venta[]> { return this.http.get<Venta[]>(`${API}/cliente/${doc}`); }
