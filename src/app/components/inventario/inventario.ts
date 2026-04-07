@@ -17,34 +17,62 @@ export class InventarioComponent implements OnInit {
   soloAlertas = false;
   toast: { msg:string; type:'success'|'error' } | null = null;
 
-  addForm = { idBicicleta:'', cantidadInicial:0, stockMinimo:0 };
+  addForm = { idBicicleta: '', cantidadInicial: 0, stockMinimo: 0 };
   editQuantity = 0;
 
   constructor(private svc: InventarioService, private biciSvc: BicicletaService) {}
-  ngOnInit() { this.load(); this.biciSvc.getBicicletas().subscribe((d: Bicicleta[]) => this.bicicletas = d);}
 
-  load(alertas = false) {
-    this.loading = true; this.soloAlertas = alertas;
-    const obs = alertas ? this.svc.getAlertas() : this.svc.getAll();
-    obs.subscribe({ next: d => { this.inventario=d; this.loading=false; }, error: () => this.loading=false });
+  ngOnInit() {
+    this.load();
+    this.biciSvc.getBicicletas().subscribe((d: Bicicleta[]) => {
+      this.bicicletas = d;
+    });
   }
 
-  openEdit(item: any) { this.editingItem=item; this.editQuantity=item.cantidadDisponible; this.editModalOpen=true; }
+  load(alertas = false) {
+    this.loading = true;
+    this.soloAlertas = alertas;
+    const obs = alertas ? this.svc.getAlertas() : this.svc.getAll();
+    obs.subscribe({
+      next: d => { this.inventario = d; this.loading = false; },
+      error: () => this.loading = false
+    });
+  }
+
+  openEdit(item: any) {
+    this.editingItem = item;
+    this.editQuantity = item.cantidadDisponible;
+    this.editModalOpen = true;
+  }
 
   saveAdd() {
-    this.svc.create(+this.addForm.idBicicleta, this.addForm.cantidadInicial, this.addForm.stockMinimo).subscribe({
-      next: () => { this.showToast('Inventario registrado','success'); this.addModalOpen=false; this.addForm={idBicicleta:'',cantidadInicial:0,stockMinimo:0}; this.load(); },
-      error: () => this.showToast('Error. ¿Ya existe inventario para esa bicicleta?','error')
+    if (!this.addForm.idBicicleta || this.addForm.idBicicleta === '') {
+      this.showToast('Debe seleccionar una bicicleta', 'error');
+      return;
+    }
+    const id = Number(this.addForm.idBicicleta);
+    this.svc.create(id, this.addForm.cantidadInicial, this.addForm.stockMinimo).subscribe({
+      next: () => {
+        this.showToast('Inventario registrado con éxito', 'success');
+        this.addModalOpen = false;
+        this.addForm = { idBicicleta: '', cantidadInicial: 0, stockMinimo: 0 };
+        this.load();
+      },
+      error: () => this.showToast('Error al registrar inventario', 'error')
     });
   }
 
   saveEdit() {
     this.svc.updateCantidad(this.editingItem.bicicleta.idBicicleta, this.editQuantity).subscribe({
-      next: () => { this.showToast('Cantidad actualizada','success'); this.editModalOpen=false; this.load(this.soloAlertas); },
-      error: () => this.showToast('Error al actualizar','error')
+      next: () => {
+        this.showToast('Cantidad actualizada', 'success');
+        this.editModalOpen = false;
+        this.load(this.soloAlertas);
+      },
+      error: () => this.showToast('Error al actualizar', 'error')
     });
   }
 
   isCritical(item: any) { return item.cantidadDisponible <= item.stockMinimo; }
-  showToast(msg: string, type: 'success'|'error') { this.toast={msg,type}; setTimeout(()=>this.toast=null,4000); }
+  showToast(msg: string, type: 'success'|'error') { this.toast = {msg, type}; setTimeout(() => this.toast = null, 4000); }
 }

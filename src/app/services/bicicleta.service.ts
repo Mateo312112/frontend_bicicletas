@@ -7,7 +7,7 @@ import { Bicicleta } from '../models/bicicleta.model';
   providedIn: 'root',
 })
 export class BicicletaService {
-  private apiUrl = 'http://localhost:8080/bicicletas';
+  private apiUrl = 'http://localhost:8080/api/bicicletas';
 
   constructor(private http: HttpClient) {}
 
