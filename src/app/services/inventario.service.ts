@@ -18,4 +18,6 @@ export class InventarioService {
   updateCantidad(idBicicleta: number, nuevaCantidad: number): Observable<Inventario> {
     return this.http.put<Inventario>(`${API}/bicicleta/${idBicicleta}?nuevaCantidad=${nuevaCantidad}`, {});
   }
+
+  
 }
