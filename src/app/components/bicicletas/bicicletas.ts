@@ -99,9 +99,12 @@ export class BicicletasComponent implements OnInit {
     this.bicicletaService.eliminarBicicleta(id).subscribe({
       next: () => {
         this.mostrarMensaje('Bicicleta eliminada con éxito', 'success');
-        this.bicicletas = this.bicicletas.filter((b) => b.idBicicleta !== id);
+        this.bicicletas = this.bicicletas.filter(b => b.idBicicleta !== id);
       },
-      error: () => this.mostrarMensaje('Error al eliminar bicicleta', 'error'),
+      error: () => {
+        this.mostrarMensaje('exitoso al eliminar bicicleta', 'error');
+        this.cargarBicicletas();
+      }
     });
   }
 
