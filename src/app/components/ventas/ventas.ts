@@ -55,7 +55,9 @@ export class Ventas implements OnInit {
   addItem() { this.items.push({ idBicicleta:0, cantidad:1 }); }
   removeItem(i: number) { this.items.splice(i,1); }
 
-  getBici(id: number) { return this.bicicletas.find(b => b.idBicicleta === id); }
+  getBici(id: number) { 
+  return this.bicicletas.find(b => b.idBicicleta === Number(id)); 
+}
   getSubtotal(item: { idBicicleta:number; cantidad:number }) {
     const b = this.getBici(item.idBicicleta);
     return b ? Number(b.precioLista) * item.cantidad : 0;
@@ -63,17 +65,27 @@ export class Ventas implements OnInit {
   getTotal() { return this.items.reduce((t,i)=>t+this.getSubtotal(i),0); }
 
   registrar() {
-    if (!this.clienteEncontrado) { this.showToast('Verifique el cliente primero','error'); return; }
-    if (this.items.some(i=>i.idBicicleta===0)) { this.showToast('Seleccione bicicleta en todos los ítems','error'); return; }
-    this.svc.create({ documentoCliente: this.docCliente, items: this.items }).subscribe({
-      next: () => {
-        this.showToast('Venta registrada con éxito','success');
-        this.newModalOpen=false; this.load();
-        this.docCliente=''; this.clienteEncontrado=null; this.items=[{idBicicleta:0,cantidad:1}];
-      },
-      error: () => this.showToast('Error. Verifique el stock disponible.','error')
-    });
-  }
+  if (!this.clienteEncontrado) { this.showToast('Verifique el cliente primero', 'error'); return; }
+  if (this.items.some(i => i.idBicicleta === 0)) { this.showToast('Seleccione bicicleta en todos los ítems', 'error'); return; }
+
+  // Convertir idBicicleta a número por si viene como string del select
+  const itemsLimpios = this.items.map(i => ({
+    idBicicleta: Number(i.idBicicleta),
+    cantidad: Number(i.cantidad)
+  }));
+
+  this.svc.create({ documentoCliente: this.docCliente, items: itemsLimpios }).subscribe({
+    next: () => {
+      this.showToast('Venta registrada con éxito', 'success');
+      this.newModalOpen = false;
+      this.load();
+      this.docCliente = '';
+      this.clienteEncontrado = null;
+      this.items = [{ idBicicleta: 0, cantidad: 1 }];
+    },
+    error: () => this.showToast('Error. Verifique el stock disponible.', 'error')
+  });
+}
 
   formatFecha(f: any) {
     if (!f) return '-';
