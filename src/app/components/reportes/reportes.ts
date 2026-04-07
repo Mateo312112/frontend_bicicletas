@@ -31,21 +31,13 @@ export class Reportes implements OnInit {
     this.loading = true;
     this.filtrando = false;
     this.soloStockCritico = false;
-    Promise.all([
-      this.svc.getVentasPorDia().toPromise(),
-      this.svc.getTopProductos().toPromise(),
-      this.svc.getStock().toPromise(),
-    ])
-      .then(([v, t, s]: any) => {
-        this.ventasDia = v || [];
-        this.topProductos = t || [];
-        this.stock = s || [];
-        this.loading = false;
-      })
-      .catch(() => {
-        this.showToast('Error al cargar reportes', 'error');
-        this.loading = false;
-      });
+
+    this.svc.getVentasPorDia().subscribe({ next: v => this.ventasDia = v || [] });
+    this.svc.getTopProductos().subscribe({ next: t => this.topProductos = t || [] });
+    this.svc.getStock().subscribe({
+      next: s => { this.stock = s || []; this.loading = false; },
+      error: () => { this.showToast('Error al cargar reportes', 'error'); this.loading = false; }
+    });
   }
 
   filtrarRango() {
