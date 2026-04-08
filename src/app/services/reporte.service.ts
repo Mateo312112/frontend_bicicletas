@@ -2,8 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-const API = '/api/reportes';
-
+const API = 'https://backendbicicletas-production-3e70.up.railway.app/api/reportes';
 @Injectable({ providedIn: 'root' })
 export class ReporteService {
   constructor(private http: HttpClient) {}

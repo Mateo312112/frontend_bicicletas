@@ -3,8 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Venta, VentaRequest } from '../models/venta.model';
 
-const API = '/api/ventas';
-
+const API = 'https://backendbicicletas-production-3e70.up.railway.app/api/ventas';
 @Injectable({ providedIn: 'root' })
 export class VentaService {
   constructor(private http: HttpClient) {}

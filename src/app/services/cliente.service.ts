@@ -7,8 +7,7 @@ import { Cliente } from '../models/cliente.model';
   providedIn: 'root'
 })
 export class ClienteService {
-  private apiUrl = '/api/clientes';
-
+private apiUrl = 'https://backendbicicletas-production-3e70.up.railway.app/api/clientes';
   constructor(private http: HttpClient) {}
 
   getClientes(): Observable<Cliente[]> {

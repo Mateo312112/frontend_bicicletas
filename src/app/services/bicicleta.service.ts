@@ -7,7 +7,7 @@ import { Bicicleta } from '../models/bicicleta.model';
   providedIn: 'root',
 })
 export class BicicletaService {
-  private apiUrl = '/api/bicicletas';
+private apiUrl = 'https://backendbicicletas-production-3e70.up.railway.app/api/bicicletas';
 
   constructor(private http: HttpClient) {}
 

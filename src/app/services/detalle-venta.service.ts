@@ -7,8 +7,7 @@ import { DetalleVenta } from '../models/detalle-venta.model';
   providedIn: 'root',
 })
 export class DetalleVentaService {
-private apiUrl = '/api/detalles-ventas';
-
+private apiUrl = 'https://backendbicicletas-production-3e70.up.railway.app/api/detalles-ventas';
   constructor(private http: HttpClient) {}
 
   getDetalles(): Observable<DetalleVenta[]> {
