@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Inventario } from '../models/inventario.model';
 
-const API = 'http://localhost:8080/api/inventario';  // ← URL completa para local
+const API = '/api/inventario';
 
 @Injectable({ providedIn: 'root' })
 export class InventarioService {

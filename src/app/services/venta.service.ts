@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Venta, VentaRequest } from '../models/venta.model';
 
-const API = 'http://localhost:8080/api/ventas';
+const API = '/api/ventas';
 
 @Injectable({ providedIn: 'root' })
 export class VentaService {
