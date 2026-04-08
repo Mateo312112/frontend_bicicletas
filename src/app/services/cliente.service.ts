@@ -3,15 +3,31 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Cliente } from '../models/cliente.model';
 
-@Injectable({ providedIn: 'root' })
+@Injectable({
+  providedIn: 'root'
+})
 export class ClienteService {
-  private apiUrl = 'http://localhost:8080/api/clientes'; // CORREGIDO: agregado /api/
+  private apiUrl = 'http://localhost:8080/api/clientes';  // ← URL completa para local
 
   constructor(private http: HttpClient) {}
 
-  getClientes(): Observable<Cliente[]> { return this.http.get<Cliente[]>(this.apiUrl); }
-  getClienteByDocumento(documento: string): Observable<Cliente> { return this.http.get<Cliente>(`${this.apiUrl}/${documento}`); }
-  crearCliente(cliente: Cliente): Observable<Cliente> { return this.http.post<Cliente>(this.apiUrl, cliente); }
-  actualizarCliente(documento: string, cliente: Cliente): Observable<Cliente> { return this.http.put<Cliente>(`${this.apiUrl}/${documento}`, cliente); }
-  eliminarCliente(documento: string): Observable<any> { return this.http.delete(`${this.apiUrl}/${documento}`, { responseType: 'text' as 'json' }); }
+  getClientes(): Observable<Cliente[]> {
+    return this.http.get<Cliente[]>(this.apiUrl);
+  }
+
+  getClienteByDocumento(documento: string): Observable<Cliente> {
+    return this.http.get<Cliente>(`${this.apiUrl}/${documento}`);
+  }
+
+  crearCliente(cliente: Cliente): Observable<Cliente> {
+    return this.http.post<Cliente>(this.apiUrl, cliente);
+  }
+
+  actualizarCliente(documento: string, cliente: Cliente): Observable<Cliente> {
+    return this.http.put<Cliente>(`${this.apiUrl}/${documento}`, cliente);
+  }
+
+  eliminarCliente(documento: string): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}/${documento}`);
+  }
 }

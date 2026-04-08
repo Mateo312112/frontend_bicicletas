@@ -62,7 +62,7 @@
       <div class="form-group">
         <label>Bicicleta</label>
         <select [(ngModel)]="addForm.idBicicleta">
-          <option value="">Cliente se registro correctamente</option>
+          <option value="">Buscar Bicicleta</option>
           <option *ngFor="let b of bicicletas" [value]="b.idBicicleta">{{b.codigo}} — {{b.marca}} {{b.modelo}}</option>
         </select>
       </div>

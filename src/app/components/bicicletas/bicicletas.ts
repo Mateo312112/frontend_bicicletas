@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { BicicletaService } from '../../services/bicicleta.service';
@@ -20,6 +20,7 @@ export class BicicletasComponent implements OnInit {
   searchTipo = '';
   mensaje = '';
   tipoMensaje = '';
+  private ultimoClick = 0;
 
   formData: Bicicleta = {
     codigo: '',
@@ -30,28 +31,34 @@ export class BicicletasComponent implements OnInit {
   };
 
   idOriginal: number = 0;
-
   tipos = ['Montaña', 'Ruta', 'Urbana'];
 
-  constructor(private bicicletaService: BicicletaService) {}
+  constructor(private bicicletaService: BicicletaService,
+    private cdr: ChangeDetectorRef  
+  ) {}
 
   ngOnInit(): void {
     this.cargarBicicletas();
   }
 
-  cargarBicicletas(): void {
+cargarBicicletas(): void {
+    console.log("Cargando bicicletas...");
     this.loading = true;
     this.bicicletaService.getBicicletas().subscribe({
       next: (data) => {
+        console.log("Datos recibidos:", data);
         this.bicicletas = data;
         this.loading = false;
+        this.cdr.detectChanges();  // ← Fuerza la actualización de la vista
       },
-      error: () => {
+      error: (err) => {
+        console.error("Error:", err);
         this.mostrarMensaje('Error al cargar bicicletas', 'error');
         this.loading = false;
+        this.cdr.detectChanges();  // ← Fuerza la actualización
       },
     });
-  }
+}
 
   abrirModalCrear(): void {
     this.editando = false;
@@ -70,9 +77,16 @@ export class BicicletasComponent implements OnInit {
     this.mostrarModal = false;
   }
 
-  guardando = false;
-
   guardar(): void {
+    const ahora = Date.now();
+    if (ahora - this.ultimoClick < 1000) {
+      console.log('Click ignorado - muy rápido');
+      return;
+    }
+    this.ultimoClick = ahora;
+    
+    console.log('Guardando...');
+    
     if (this.editando) {
       this.bicicletaService.actualizarBicicleta(this.idOriginal, this.formData).subscribe({
         next: () => {
@@ -96,23 +110,36 @@ export class BicicletasComponent implements OnInit {
 
   eliminar(id: number): void {
     if (!confirm('¿Estás seguro de eliminar esta bicicleta?')) return;
+    
     this.bicicletaService.eliminarBicicleta(id).subscribe({
       next: () => {
         this.mostrarMensaje('Bicicleta eliminada con éxito', 'success');
-        this.bicicletas = this.bicicletas.filter(b => b.idBicicleta !== id);
-      },
-      error: () => {
-        this.mostrarMensaje('exitoso al eliminar bicicleta', 'error');
+        // Recargar la lista completa desde el backend
         this.cargarBicicletas();
+      },
+      error: (err) => {
+        // Si el error es 200 o OK, la eliminación fue exitosa
+        if (err.status === 200 || err.status === 204) {
+          this.mostrarMensaje('Bicicleta eliminada con éxito', 'success');
+          this.cargarBicicletas();
+        } else {
+          console.error('Error:', err);
+          this.mostrarMensaje('Error al eliminar bicicleta', 'error');
+        }
       }
     });
-  }
+}
 
-  mostrarMensaje(msg: string, tipo: string): void {
+mostrarMensaje(msg: string, tipo: string): void {
     this.mensaje = msg;
     this.tipoMensaje = tipo;
-    setTimeout(() => (this.mensaje = ''), 3000);
-  }
+    
+    setTimeout(() => {
+        this.mensaje = '';
+        this.tipoMensaje = '';
+        this.cdr.detectChanges();  // Forzar actualización
+    }, 3000);
+}
 
   get bicicletasFiltradas(): Bicicleta[] {
     return this.bicicletas.filter(

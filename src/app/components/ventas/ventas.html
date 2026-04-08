@@ -2,7 +2,7 @@
   <div class="page-header">
     <div><h1>VENTAS</h1><p>Registro y consulta de transacciones comerciales.</p></div>
     <div class="page-actions">
-      <button class="btn btn-primary" (click)="newModalOpen=true;docCliente='';clienteEncontrado=null;items=[{idBicicleta:0,cantidad:1}]">
+      <button class="btn btn-primary" (click)="abrirModalNuevaVenta()" type="button">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
         Nueva Venta
       </button>
@@ -14,11 +14,11 @@
       <label>Documento Cliente</label>
       <input [(ngModel)]="searchDoc" placeholder="Filtrar por documento..." (keydown.enter)="filtrar()">
     </div>
-    <button class="btn btn-primary" (click)="filtrar()">
+    <button class="btn btn-primary" (click)="filtrar()" type="button">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
       Filtrar
     </button>
-    <button class="btn btn-ghost" (click)="searchDoc='';load()">
+    <button class="btn btn-ghost" (click)="resetFiltro()" type="button">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.96"/></svg>
       Todos
     </button>
@@ -26,10 +26,22 @@
 
   <div class="table-wrap">
     <table>
-      <thead><tr><th>ID Venta</th><th>Cliente</th><th>Fecha</th><th>Total</th><th style="text-align:right">Detalle</th></tr></thead>
+      <thead>
+        <tr>
+          <th>ID Venta</th>
+          <th>Cliente</th>
+          <th>Fecha</th>
+          <th>Total</th>
+          <th style="text-align:right">Detalle</th>
+        </tr>
+      </thead>
       <tbody>
-        <tr *ngIf="loading"><td colspan="5" style="text-align:center;padding:40px;color:var(--text2)">Cargando...</td></tr>
-        <tr *ngIf="!loading && ventas.length===0"><td colspan="5" style="text-align:center;padding:40px;color:var(--text2);font-style:italic">No se encontraron ventas.</td></tr>
+        <tr *ngIf="loading">
+          <td colspan="5" style="text-align:center;padding:40px;color:var(--text2)">Cargando...</td>
+        </tr>
+        <tr *ngIf="!loading && ventas.length===0">
+          <td colspan="5" style="text-align:center;padding:40px;color:var(--text2);font-style:italic">No se encontraron ventas.</td>
+        </tr>
         <tr *ngFor="let v of ventas">
           <td class="mono" style="color:var(--text2)">{{v.idVenta}}</td>
           <td>
@@ -39,7 +51,7 @@
           <td class="mono">{{formatFecha(v.fechaVenta)}}</td>
           <td class="mono" style="font-weight:700">${{formatPrice(v.totalVenta)}}</td>
           <td style="text-align:right">
-            <button class="btn btn-ghost btn-icon btn-sm" (click)="verDetalle(v.idVenta!)">
+            <button class="btn btn-ghost btn-icon btn-sm" (click)="verDetalle(v.idVenta!)" type="button">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
             </button>
           </td>
@@ -50,12 +62,14 @@
 </div>
 
 <!-- NUEVA VENTA MODAL -->
-<div class="modal-overlay" *ngIf="newModalOpen" (click)="newModalOpen=false">
+<div class="modal-overlay" *ngIf="newModalOpen" (click)="cerrarModalNuevaVenta()">
   <div class="modal-backdrop"></div>
   <div class="modal-box" style="max-width:600px" (click)="$event.stopPropagation()">
     <div class="modal-header">
       <h3>Nueva Venta</h3>
-      <button class="modal-close" (click)="newModalOpen=false"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      <button class="modal-close" (click)="cerrarModalNuevaVenta()" type="button">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
     </div>
     <div class="modal-body">
       <!-- Cliente -->
@@ -63,7 +77,7 @@
         <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px">Datos del Cliente</div>
         <div style="display:flex;gap:8px">
           <input [(ngModel)]="docCliente" placeholder="Documento del cliente" class="mono" style="flex:1" (keydown.enter)="buscarCliente()">
-          <button class="btn btn-ghost btn-icon" (click)="buscarCliente()">
+          <button class="btn btn-ghost btn-icon" (click)="buscarCliente()" type="button">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
           </button>
         </div>
@@ -77,7 +91,7 @@
       <div style="border-bottom:1px solid var(--border);padding-bottom:16px;margin-bottom:0">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
           <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em">Ítems de Venta</div>
-          <button class="add-item-btn" (click)="addItem()">
+          <button class="add-item-btn" (click)="addItem()" type="button">
             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
             Agregar Ítem
           </button>
@@ -85,40 +99,42 @@
         <div *ngFor="let item of items; let i=index" class="item-row">
           <div>
             <label style="margin-bottom:4px">Bicicleta</label>
-            <select [(ngModel)]="item.idBicicleta">
+            <select [(ngModel)]="item.idBicicleta" (change)="calcularTotales()">
               <option [value]="0">Seleccionar...</option>
               <option *ngFor="let b of bicicletas" [value]="b.idBicicleta">{{b.codigo}} — {{b.marca}} {{b.modelo}} (${{formatPrice(b.precioLista)}})</option>
             </select>
           </div>
           <div>
             <label style="margin-bottom:4px">Cant.</label>
-            <input type="number" min="1" [(ngModel)]="item.cantidad" class="mono">
+            <input type="number" min="1" [(ngModel)]="item.cantidad" (change)="calcularTotales()" class="mono">
           </div>
           <div style="text-align:right;align-self:end;padding-bottom:6px">
             <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--text2)">Subtotal</div>
-            <div class="mono" style="font-weight:700;font-size:13px">${{formatPrice(getSubtotal(item))}}</div>
+            <div class="mono" style="font-weight:700;font-size:13px">${{formatPrice(subtotales[i])}}</div>
           </div>
-          <button class="remove-item-btn" (click)="removeItem(i)" [disabled]="items.length===1">
+          <button class="remove-item-btn" (click)="removeItem(i)" [disabled]="items.length===1" type="button">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
           </button>
         </div>
       </div>
       <div class="total-bar" style="margin-top:0">
         <span>Total General</span>
-        <span>${{formatPrice(getTotal())}}</span>
+        <span>${{formatPrice(totalGeneral)}}</span>
       </div>
-      <button class="btn btn-primary" style="width:100%;justify-content:center;padding:14px;margin-top:12px" (click)="registrar()">Registrar Venta</button>
+      <button class="btn btn-primary" style="width:100%;justify-content:center;padding:14px;margin-top:12px" (click)="registrar()" type="button">Registrar Venta</button>
     </div>
   </div>
 </div>
 
 <!-- DETALLE MODAL -->
-<div class="modal-overlay" *ngIf="detailModalOpen" (click)="detailModalOpen=false">
+<div class="modal-overlay" *ngIf="detailModalOpen" (click)="cerrarModalDetalle()">
   <div class="modal-backdrop"></div>
   <div class="modal-box" style="max-width:580px" (click)="$event.stopPropagation()">
     <div class="modal-header">
       <h3>Detalle Venta #{{selectedVenta?.idVenta}}</h3>
-      <button class="modal-close" (click)="detailModalOpen=false"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      <button class="modal-close" (click)="cerrarModalDetalle()" type="button">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
     </div>
     <div class="modal-body" *ngIf="selectedVenta">
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
@@ -134,7 +150,14 @@
       </div>
       <div class="table-wrap">
         <table>
-          <thead><tr><th>Bicicleta</th><th style="text-align:center">Cant.</th><th style="text-align:right">Precio Unit.</th><th style="text-align:right">Subtotal</th></tr></thead>
+          <thead>
+            <tr>
+              <th>Bicicleta</th>
+              <th style="text-align:center">Cant.</th>
+              <th style="text-align:right">Precio Unit.</th>
+              <th style="text-align:right">Subtotal</th>
+            </tr>
+          </thead>
           <tbody>
             <tr *ngFor="let det of selectedVenta.detallesVenta">
               <td>
